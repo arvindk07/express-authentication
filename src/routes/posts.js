@@ -104,6 +104,7 @@ router.put(
     }
   }
 );
+
 router.delete(
   "delete-post/:id",
   userAuth,
@@ -121,19 +122,10 @@ router.delete(
           message: "Post doesn't belong to you.",
         });
       }
-      post = await Post.findOneAndUpdate(
-        {
-          author: user._id,
-          _id: id,
-        },
-        {
-          ...body,
-          slug: SlugGenerator(body.title),
-        },
-        {
-          new: true,
-        }
-      );
+      post = await Post.findOneAndDelete({
+        author: user._id,
+        _id: id,
+      });
       return res.status(200).json({
         post,
         success: true,
